@@ -7,16 +7,16 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.cross_validation import train_test_split
 import os
 
-#¶¨Òå³£Á¿
+#å®šä¹‰å¸¸é‡
 rnn_unit=10       #hidden layer units
 input_size=4
 output_size=1
-lr=0.0005         #Ñ§Ï°ÂÊ
-#¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªµ¼ÈëÊı¾İ¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+lr=0.0005         #å­¦ä¹ ç‡
+#â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”å¯¼å…¥æ•°æ®â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
 
 
 def deal_data(filename,sequence_length):
-    #Êı¾İ¶ÁÈ¡
+    #æ•°æ®è¯»å–
     Date_load = pd.read_csv(filename)
     X = Date_load[['vlo', 'open', 'upper', 'lower']]
     Y = Date_load['last']
@@ -25,7 +25,7 @@ def deal_data(filename,sequence_length):
     y_trans = scaler.fit_transform(Y)
     data_x = []
     data_y = []
-    #¹éÒ»»¯¡¢ĞòÁĞ»¯
+    #å½’ä¸€åŒ–ã€åºåˆ—åŒ–
     for i in range(len(X_trans) - sequence_length):
         temp = [X_trans[i+j] for j in range(sequence_length)]
         data_x.append(temp)
@@ -38,16 +38,16 @@ def deal_data(filename,sequence_length):
         reshaped_y = np.array(data_y).astype('float64')
         np.random.shuffle(reshaped_y)
         y = reshaped_y
-    #Êı¾İÖ§Àë
+    #æ•°æ®æ”¯ç¦»
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.20, random_state = 0)
-    #Êı¾İÎ¬¶È×ª»¯
+    #æ•°æ®ç»´åº¦è½¬åŒ–
     y_train = np.reshape(y_train, (y_train.shape[0], y_train.shape[1], 1))
-    #·´¹éÒ»»¯
+    #åå½’ä¸€åŒ–
     y_test = scaler.inverse_transform(y_test)
     return x_train, x_test, y_train, y_test
 
-#¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¶¨ÒåÉñ¾­ÍøÂç±äÁ¿¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
-#ÊäÈë²ã¡¢Êä³ö²ãÈ¨ÖØ¡¢Æ«ÖÃ
+#â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”å®šä¹‰ç¥ç»ç½‘ç»œå˜é‡â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+#è¾“å…¥å±‚ã€è¾“å‡ºå±‚æƒé‡ã€åç½®
 
 weights={
          'in':tf.Variable(tf.random_normal([input_size,rnn_unit])),
@@ -58,19 +58,19 @@ biases={
         'out':tf.Variable(tf.constant(0.1,shape=[1,]))
        }
 
-#¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¶¨ÒåÉñ¾­ÍøÂç±äÁ¿¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+#â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”å®šä¹‰ç¥ç»ç½‘ç»œå˜é‡â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
 def lstm(X):     
     batch_size=tf.shape(X)[0]
     time_step=tf.shape(X)[1]
     w_in=weights['in']
     b_in=biases['in']  
-    input=tf.reshape(X,[-1,input_size])  #ĞèÒª½«tensor×ª³É2Î¬½øĞĞ¼ÆËã£¬¼ÆËãºóµÄ½á¹û×÷ÎªÒş²Ø²ãµÄÊäÈë
+    input=tf.reshape(X,[-1,input_size])  #éœ€è¦å°†tensorè½¬æˆ2ç»´è¿›è¡Œè®¡ç®—ï¼Œè®¡ç®—åçš„ç»“æœä½œä¸ºéšè—å±‚çš„è¾“å…¥
     input_rnn=tf.matmul(input,w_in)+b_in
-    input_rnn=tf.reshape(input_rnn,[-1,time_step,rnn_unit])  #½«tensor×ª³É3Î¬£¬×÷Îªlstm cellµÄÊäÈë
+    input_rnn=tf.reshape(input_rnn,[-1,time_step,rnn_unit])  #å°†tensorè½¬æˆ3ç»´ï¼Œä½œä¸ºlstm cellçš„è¾“å…¥
     cell=tf.contrib.rnn.BasicLSTMCell(rnn_unit)
     init_state=cell.zero_state(batch_size,dtype=tf.float32)
-    output_rnn,final_states=tf.nn.dynamic_rnn(cell, input_rnn,initial_state=init_state, dtype=tf.float32)  #output_rnnÊÇ¼ÇÂ¼lstmÃ¿¸öÊä³ö½ÚµãµÄ½á¹û£¬final_statesÊÇ×îºóÒ»¸öcellµÄ½á¹û
-    output=tf.reshape(output_rnn,[-1,rnn_unit]) #×÷ÎªÊä³ö²ãµÄÊäÈë
+    output_rnn,final_states=tf.nn.dynamic_rnn(cell, input_rnn,initial_state=init_state, dtype=tf.float32)  #output_rnnæ˜¯è®°å½•lstmæ¯ä¸ªè¾“å‡ºèŠ‚ç‚¹çš„ç»“æœï¼Œfinal_statesæ˜¯æœ€åä¸€ä¸ªcellçš„ç»“æœ
+    output=tf.reshape(output_rnn,[-1,rnn_unit]) #ä½œä¸ºè¾“å‡ºå±‚çš„è¾“å…¥
     w_out=weights['out']
     b_out=biases['out']
     pred=tf.matmul(output,w_out)+b_out
@@ -78,13 +78,13 @@ def lstm(X):
 
 
 
-#¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªÑµÁ·Ä£ĞÍ¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+#â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”è®­ç»ƒæ¨¡å‹â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
 def train_lstm(batch_size=20,time_step=10):
     X=tf.placeholder(tf.float32, shape=[None,time_step,input_size])
     Y=tf.placeholder(tf.float32, shape=[None,time_step,output_size])
     x_train, x_test, y_train, y_test=deal_data('e:/RB_Ddata.csv',10)
     pred,_=lstm(X)
-    #ËğÊ§º¯Êı
+    #æŸå¤±å‡½æ•°
     loss=tf.reduce_mean(tf.square(tf.reshape(pred,[-1])-tf.reshape(Y, [-1])))
     train_op=tf.train.AdamOptimizer(lr).minimize(loss)
     saver = tf.train.Saver()
@@ -92,7 +92,7 @@ def train_lstm(batch_size=20,time_step=10):
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         #saver.restore(sess, module_file)
-        #ÖØ¸´ÑµÁ·10000´Î
+        #é‡å¤è®­ç»ƒ10000æ¬¡
         for i in range(2000):
             for step in range(len(x_train)//batch_size-1):
                 _,loss_=sess.run([train_op,loss],feed_dict={X:x_train[step*batch_size:(step+1)*batch_size],Y:y_train[step*batch_size:(step+1)*batch_size]})
@@ -107,7 +107,7 @@ def train_lstm(batch_size=20,time_step=10):
 train_lstm()
 
 
-#¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªÔ¤²âÄ£ĞÍ¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+#â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”é¢„æµ‹æ¨¡å‹â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
 def prediction(time_step=10):
     X=tf.placeholder(tf.float32, shape=[None,time_step,input_size])
     x_train, x_test, y_train, y_test=deal_data('e:/RB_Ddata.csv',10)
@@ -115,7 +115,7 @@ def prediction(time_step=10):
     pred,_=lstm(X)     
     saver=tf.train.Saver(tf.global_variables())
     with tf.Session() as sess:
-        #²ÎÊı»Ö¸´
+        #å‚æ•°æ¢å¤
         saver = tf.train.Saver()
         os.path.exists('d:/variables/basiclstm1.ckpt')
         saver.restore(sess, 'd:/variables/basiclstm1.ckpt')
@@ -133,8 +133,8 @@ def prediction(time_step=10):
         test_predict = scaler.inverse_transform(test_predict)
         #test_y=np.array(test_y)*std[7]+mean[7]
         #test_predict=np.array(test_predict)*std[7]+mean[7]
-        #acc=np.average(np.abs(test_predict-test_y[:len(test_predict)])/test_y[:len(test_predict)])  #Æ«²î
-        #ÒÔÕÛÏßÍ¼±íÊ¾½á¹û
+        #acc=np.average(np.abs(test_predict-test_y[:len(test_predict)])/test_y[:len(test_predict)])  #åå·®
+        #ä»¥æŠ˜çº¿å›¾è¡¨ç¤ºç»“æœ
         plt.figure()
         plt.plot(list(range(len(test_predict))), test_predict, color='b')
         plt.plot(list(range(len(y_test))), y_test,  color='r')
@@ -144,24 +144,24 @@ def prediction(time_step=10):
 
 #---------------------------------------------------------------------------------------------------------------------------------
 
-'''def prediction():
-    pred,_=lstm(1)    #Ô¤²âÊ±Ö»ÊäÈë[1,time_step,input_size]µÄ²âÊÔÊı¾İ
+def prediction():
+    pred,_=lstm(1)    #é¢„æµ‹æ—¶åªè¾“å…¥[1,time_step,input_size]çš„æµ‹è¯•æ•°æ®
     saver=tf.train.Saver(tf.global_variables())
     with tf.Session() as sess:
-        #²ÎÊı»Ö¸´
+        #å‚æ•°æ¢å¤
         module_file = tf.train.latest_checkpoint(base_path+'module2/')
         saver.restore(sess, module_file) 
-        #È¡ÑµÁ·¼¯×îºóÒ»ĞĞÎª²âÊÔÑù±¾¡£shape=[1,time_step,input_size]
+        #å–è®­ç»ƒé›†æœ€åä¸€è¡Œä¸ºæµ‹è¯•æ ·æœ¬ã€‚shape=[1,time_step,input_size]
         prev_seq=train_x[-1]
         predict=[]
-        #µÃµ½Ö®ºó100¸öÔ¤²â½á¹û
+        #å¾—åˆ°ä¹‹å100ä¸ªé¢„æµ‹ç»“æœ
         for i in range(100):
             next_seq=sess.run(pred,feed_dict={X:[prev_seq]})
             predict.append(next_seq[-1])
-            #Ã¿´ÎµÃµ½×îºóÒ»¸öÊ±¼ä²½µÄÔ¤²â½á¹û£¬ÓëÖ®Ç°µÄÊı¾İ¼ÓÔÚÒ»Æğ£¬ĞÎ³ÉĞÂµÄ²âÊÔÑù±¾
+            #æ¯æ¬¡å¾—åˆ°æœ€åä¸€ä¸ªæ—¶é—´æ­¥çš„é¢„æµ‹ç»“æœï¼Œä¸ä¹‹å‰çš„æ•°æ®åŠ åœ¨ä¸€èµ·ï¼Œå½¢æˆæ–°çš„æµ‹è¯•æ ·æœ¬
             prev_seq=np.vstack((prev_seq[1:],next_seq[-1]))
-        #ÒÔÕÛÏßÍ¼±íÊ¾½á¹û
+        #ä»¥æŠ˜çº¿å›¾è¡¨ç¤ºç»“æœ
         plt.figure()
         plt.plot(list(range(len(normalize_data))), normalize_data, color='b')
         plt.plot(list(range(len(normalize_data), len(normalize_data) + len(predict))), predict, color='r')
-        plt.show()'''
+        plt.show()
